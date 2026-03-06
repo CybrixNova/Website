@@ -37,6 +37,14 @@ app.use('/blog', require('./routes/blog'))
 
 app.use('/admin', require('./routes/admin'))
 
+
+app.get('/erp-schedule', (req, res)=>{
+        db.query("SELECT * FROM erp_schedule", (err, results) => {
+        res.render("erp-schedule", { rows: results });
+    });
+})
+
+
 app.get('/:page', (req, res)=>{
         db.query("SELECT * FROM pages WHERE url = ?", [req.params.page], (err, result) => {
         if (err) {
