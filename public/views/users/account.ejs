@@ -12,15 +12,19 @@
             <%- include('../includes/header') %>
         </div>
         <div class="main-content">
-            <div class="centered-box" style="max-width: fit-content;">
-                <h1>Welcome back, <span style="color: magenta;"><%- user.username %></span></h1>
-                <a href="/users/logout"><img src="/img/icons/win98/msg_error-0.png" height="24px" style="vertical-align: middle;"> LOGOUT</a>
+            <h1>Welcome back,</h1>
+            <div style="font-size: 2em;">
+                <% if (user.level === "Owner") { %>
+                    <span style="color: yellow; font-weight: bold;">[<%- user.level %>]</span>
+                <% } else { %>
+                    <span>[<%- user.level %>]</span>
+                <% } %>
+                <span style="color: magenta; margin-left: 5px;"><%- user.username %></span>
             </div>
         </div>
         <div class="footer">
             <%- include('../includes/footer') %>
         </div>
     </div>
-    
 </body>
 </html>
