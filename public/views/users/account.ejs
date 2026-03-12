@@ -15,13 +15,11 @@
             <div class="centered-box" style="max-width: fit-content;">
                 <h1>
                     Welcome back,<br>
-                    [
                     <% if (user.level === "Owner") { %>
                         <span style="color: yellow; font-weight: bold;"><%- user.level %></span>
                     <% } else { %>
                         <span><%- user.level %></span>
                     <% } %>
-                    ]
                     <span style="color: magenta; margin-left: 5px;"><%- user.username %></span>
                 </h1>
                 <a href="/users/logout">
