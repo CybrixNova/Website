@@ -16,9 +16,9 @@
                 <h1>
                     Welcome back,<br>
                     <% if (user.level === "Owner") { %>
-                        [<span style="color: yellow; font-weight: bold;"><%- user.level %></span>
+                        <span style="color: yellow; font-weight: bold;"><%- user.level %></span>
                     <% } else { %>
-                        <span><%- user.level %></span>]
+                        [<span><%- user.level %></span>]
                     <% } %>
                     <span style="color: magenta; margin-left: 5px;"><%- user.username %></span>
                 </h1>
