@@ -22,13 +22,13 @@
             </div>
 
             <div class="centered-box">
-                <form action="/admin/pagebuilder/edit/<%- page.ID %>" method="post">
+                <form action="/admin/pagebuilder/new" method="post">
                     <label for="title" >Title of the page.</label><br>
-                    <input type="text" name="title" id="title" value="<%= page.title %>"><br>
+                    <input type="text" name="title" id="title"><br>
                     <label for="url">URL of the page.</label><br>
-                    <input type="text" name="url" id="url" value="<%= page.url %>"><br>
+                    <input type="text" name="url" id="url"><br>
                     <label for="title">Page content.</label><br>
-                    <textarea name="content" style="text-align: left;" id="content"><%= page.content %></textarea>
+                    <textarea name="content" style="text-align: left;" id="content"></textarea>
                     <button type="submit">Save page</button>
                 </form>
             </div>

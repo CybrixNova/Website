@@ -85,6 +85,24 @@ admin.post('/pagebuilder/edit/:id', (req, res)=>{
             });
 })
 
+admin.get('/pagebuilder/new', (req, res)=>{
+    res.render('admin/pageBuilderCreator')
+})
+
+admin.post('/pagebuilder/new', (req, res) => {
+    db.query(
+        "INSERT INTO pages (title, url, content) VALUES (?, ?, ?)",
+        [req.body.title, req.body.url, req.body.content],
+        (err, result) => {
+            if (err) {
+                console.error("DATABASE ERROR:", err);
+                return res.status(500).send("DATABASE ERROR " + err.message);
+            }
+            res.redirect('/admin/pagebuilder');
+        }
+    );
+});
+
 
 admin.get('/blogtools/', (req, res)=>{
         db.query("SELECT * FROM blog", (err, result) => {
@@ -119,16 +137,38 @@ admin.get('/blogtools/edit/:id', (req, res)=>{
 })
 
 admin.post('/blogtools/edit/:id', (req, res)=>{
-                db.query("UPDATE blog SET title=?, url=?, category=?, content=? WHERE ID = ?", [req.body.title, req.body.url, req.body.category, req.body.content, req.params.id], function (err2) {
+                 db.query("UPDATE blog SET title=?, url=?, category=?, content=? WHERE ID = ?", [req.body.title, req.body.url, req.body.category, req.body.content, req.params.id], async(err2) =>{
                 if (err2) {
                     return res.send("DATABASE ERROR " + err2);
                 }
 
+                            // Create the full URL
+            const postUrl = req.body.url.startsWith("http")
+                ? req.body.url
+                : `https://cybrixnova.com/blog/post/${req.body.url}`;
+
+            // ---------- DISCORD ROLE PING MESSAGE ----------
+            const message = `hey <@&1442595995925090375>! ${res.locals.user.username} just updated blog post **${req.body.title}** with the category of: [${req.body.category}](https://cybrixnova.com/blog/category/${req.body.category}) — check it out:\n${postUrl}`;
+            // ------------------------------------------------
+
+            try {
+                await axios.post(process.env.DISCORD_WEBHOOK_URL, {
+                    content: message,    // role ping works only in "content"
+                    allowed_mentions: {
+                        parse: ["roles"] // REQUIRED so the ping actually works
+                    }
+                });
+
+                //console.log("Webhook sent with role ping.");
+            } catch (e) {
+                console.error("Webhook error:", e);
+            }
 
 
                 res.redirect('/admin/blogtools'); // or wherever you want after login
             });
 })
+
 
 admin.get('/blogtools/new', (req, res)=>{
     res.render('admin/blogtoolsCreator')
@@ -154,7 +194,7 @@ admin.post('/blogtools/new', (req, res) => {
                 : `https://cybrixnova.com/blog/post/${req.body.url}`;
 
             // ---------- DISCORD ROLE PING MESSAGE ----------
-            const message = `hey <@&1442595995925090375>! Cybrix just posted a new post on his blog called **${req.body.title}** with the category of: [${req.body.category}](https://cybrixnova.com/blog/category/${req.body.category}) — check it out:\n${postUrl}`;
+            const message = `hey <@&1442595995925090375>! ${res.locals.user.username} just posted a new post on the blog called **${req.body.title}** with the category of: [${req.body.category}](https://cybrixnova.com/blog/category/${req.body.category}) — check it out:\n${postUrl}`;
             // ------------------------------------------------
 
             try {
