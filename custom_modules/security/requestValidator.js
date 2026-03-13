@@ -19,9 +19,25 @@ function userManager(req, res, next) {
         "*.php"
     ];
 
+    const path = decodeURIComponent(req.path);
+
     const isHoneypot = banned_routes.some(pattern =>
-        minimatch(req.path, pattern, { nocase: true })
+        minimatch(path, pattern, { nocase: true })
     );
+
+    if (isHoneypot) {
+        console.warn(`[HONEYPOT] ${ip} attempted ${path}`);
+
+        db.query(
+            `INSERT INTO banned_ips (ip, hits, reason)
+             VALUES (?, 1, ?)
+             ON DUPLICATE KEY UPDATE hits = hits + 1`,
+            [ip, "Security system flagged this IP as malicious"]
+        );
+
+        res.locals.banReason = "Suspicious activity detected";
+        return res.status(404).render("./error/backdoor");
+    }
 
     db.query("SELECT * FROM banned_ips WHERE ip = ?", [ip], (err, result) => {
         if (err) {
@@ -31,26 +47,12 @@ function userManager(req, res, next) {
 
         const record = result[0];
 
-        // 🚫 Hard ban
         if (record && record.hits >= threshold) {
             res.locals.banReason = record.reason;
             return res.status(404).render("./error/backdoor");
         }
 
-        // 🪤 Honeypot hit
-        if (isHoneypot) {
-            db.query(
-                `INSERT INTO banned_ips (ip, hits, reason)
-                 VALUES (?, 1, ?)
-                 ON DUPLICATE KEY UPDATE hits = hits + 1`,
-                [ip, "Security system flagged this IP as malicious"]
-            );
-
-            res.locals.banReason = "Suspicious activity detected";
-            return res.status(404).render("./error/backdoor");
-        }
-
-        return next();
+        next();
     });
 }
 
