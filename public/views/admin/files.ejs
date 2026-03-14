@@ -21,7 +21,7 @@
                 <%- include('./includes/nav') %>
             </div>
 
-            <div class="centered-box" style="overflow-x: scroll;" >
+            <div class="centered-box" style="overflow-x: scroll; max-width: 65%;" >
                 <table>
                     <tr>
                         <td>ID</td>
@@ -35,20 +35,18 @@
                         <td>ACTIONS</td>
                     </tr>
                     <% files.forEach(file => { %>
+                        <form action="/admin/files/edit/<%= file.ID %>" method="post">
                             <td><%= file.ID %></td>
                             <td><%= file.UUID %></td>
-                            <td><%= file.filename %></td>
-                            <td><%= file.uploader %></td>
+                            <td> <input type="text" name="filename" value="<%= file.filename %>"> </td>
+                            <td><input type="text" name="uploader" value="<%= file.uploader %>"></td>
                             <td><%= file.data_path %></td>
-                            <td><%= file.sharekey %></td>
-                            <td><%= file.visibility %></td>
-                            <td><%= file.description %></td>
-                            <td><a href="<%= uploadServer %>/file/<%- file.UUID %>" target="_blank"><img src="/img/icons/win98/msagent-1.png"></a>
-                                <form action="<%= uploadServer %>/delete/<%= file.ID %>" method="post" style="display:inline">
+                            <td><input type="text" name="sharekey" value="<%= file.sharekey %>"></td>
+                            <td><input type="text" name="visibility" value="<%= file.visibility %>"></td>
+                            <td> <input type="text" name="description" value="<%= file.description %>"> </td>
+                            <td><a href="<%= uploadServer %>/file/<%- file.UUID %>" target="_blank"><img src="/img/icons/win98/msagent-1.png"></a> <button type="submit" class="link-button" style="display: inline;">Save</button> <a href="/admin/files/delete/<%= file.ID %>" style="display: inline;"><img src="/img/icons/win98/no-0.png" alt="Delete"></a>
+
     <input type="hidden" name="session_token" value="<%= user.sessionToken %>">
-    <button type="submit" class="link-button">
-        Delete
-    </button>
 </form>
 </td>
                         </tr>

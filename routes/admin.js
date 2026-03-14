@@ -268,6 +268,18 @@ admin.get('/files', (req, res)=>{
     })
 })
 
+admin.post('/files/edit/:id', (req, res)=>{
+
+    db.query("UPDATE files SET filename=?, sharekey=?, uploader=?, visibility=?, description=? WHERE ID = ?", [req.body.filename, req.body.sharekey, req.body.uploader, req.body.visibility, req.body.description, req.params.id], function (err2) {
+        if (err2) {
+            return res.send("DATABASE ERROR " + err2);
+        }
+
+        res.redirect('/admin/files'); // or wherever you want after login
+
+    })
+});
+
 
 
 

@@ -1,9 +1,14 @@
 const db = require('../sql/db_connector');
 const { minimatch } = require("minimatch");
 
-function userManager(req, res, next) {
+function requestValidator(req, res, next) {
     const ip = req.ip;
     const threshold = 3;
+
+    // Allow owners and admins to bypass honeypot checks
+    if(res.locals.user.level === 'Owner' || res.locals.user.level === 'Admin'){
+        return next();
+    }
 
     const banned_routes = [
         "/wp-admin*",
@@ -56,4 +61,4 @@ function userManager(req, res, next) {
     });
 }
 
-module.exports = userManager;
+module.exports = requestValidator;

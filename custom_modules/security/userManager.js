@@ -4,7 +4,8 @@ function userManager(req, res, next) {
     const token = req.cookies?.SessionToken;
 
     if (!token) {
-        res.locals.user = null; // ensure always defined
+        res.locals.user = { level: 'Guest' }; // ensure always defined
+        res.locals.user.level = 'Guest'; // default to Guest level
         return next();
     }
 
