@@ -76,7 +76,7 @@ a{
 .admin-nav {
     position: fixed;
     top: 46px;           /* push it down a bit below the navbar */
-    width: 320px;         /* give it a consistent width */
+    width: 300px;         /* give it a consistent width */
     background-color: silver;
     color: black;
     padding: 10px;
