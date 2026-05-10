@@ -28,6 +28,19 @@ app.get('/', (req, res)=>{
     res.render('index')
 })
 
+app.get('/kinks', (req, res)=>{
+
+    db.query("SELECT * FROM kinks", (err, results) => {
+        if (err) {
+            console.error("DB error in /kinks route:", err);
+            return res.status(500).send("Server error");
+        }
+
+        res.render('kinks', { kinks: results });
+    });
+})
+
+
 
 
 app.use('/users', require('./routes/users'))
